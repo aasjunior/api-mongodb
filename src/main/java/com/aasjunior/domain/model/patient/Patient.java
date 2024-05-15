@@ -2,7 +2,7 @@ package com.aasjunior.domain.model.patient;
 
 import com.aasjunior.domain.model.common.enums.Ethnicity;
 import com.aasjunior.domain.model.common.enums.Gender;
-import com.aasjunior.domain.model.guardian.GuardianDTO;
+import com.aasjunior.domain.model.guardian.Guardian;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,21 +18,37 @@ import java.util.HashMap;
 @NoArgsConstructor
 @AllArgsConstructor
 @Document(collection = "patients")
-public class PatientDTO {
+public class Patient {
     @Id
     private String id;
     private String firstName;
     private String lastName;
-    private Gender gender;
     private String birthDate;
+    private Gender gender;
     private Ethnicity ethnicity;
     private Boolean familyCases;
     private Boolean pregnancyComplications;
     private Boolean premature;
-    private HashMap<String, GuardianDTO> guardians;
+    private HashMap<String, Guardian> guardians;
     private LocalDateTime registerDate;
 
-    public void addGuardian(GuardianDTO guardianDTO){
-        this.guardians.put(guardianDTO.getId(), guardianDTO);
+    public void addGuardian(Guardian guardian){
+        this.guardians.put(guardian.getId(), guardian);
+    }
+
+    public static Patient fromRequest(PatientRequest request){
+        return new Patient(
+                null,
+                request.firstName(),
+                request.lastName(),
+                request.birthDate(),
+                request.gender(),
+                request.ethnicity(),
+                request.familyCases(),
+                request.pregnancyComplication(),
+                request.premature(),
+                new HashMap<>(),
+                LocalDateTime.now()
+        );
     }
 }
